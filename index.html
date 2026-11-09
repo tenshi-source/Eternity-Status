@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11131b">
+  <title>Conversor de Status</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      background: #11131b;
+      color: #f2f3f8;
+      font-synthesis: none;
+      --panel: #1b1e29;
+      --muted: #a6a9b8;
+      --accent: #ad8bff;
+      --border: #303443;
+      --accent-dim: #66518d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(ellipse at 50% -20%, #28233d 0, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, #181925 0, transparent 72%),
+        #11131b;
+    }
+
+    main {
+      width: min(100% - 32px, 1180px);
+      margin: 0 auto;
+      padding: 42px 0 64px;
+    }
+
+    header {
+      position: relative;
+      margin-bottom: 28px;
+      padding: 24px 28px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(110deg, #1b1e29ed, #171821e8);
+      box-shadow: inset 0 0 0 1px #ad8bff0b, 0 14px 40px #0002;
+      text-align: center;
+    }
+
+    header::before,
+    header::after {
+      position: absolute;
+      top: 50%;
+      color: var(--accent-dim);
+      content: "✧";
+      font-size: 1.4rem;
+      transform: translateY(-50%);
+    }
+
+    header::before { left: 18px; }
+    header::after { right: 18px; }
+
+    .eyebrow {
+      margin: 0 0 9px;
+      color: var(--accent);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .7rem;
+      font-weight: 750;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 600;
+      letter-spacing: .015em;
+      text-shadow: 0 0 24px #ad8bff30;
+    }
+
+    .intro, .hint {
+      color: var(--muted);
+      line-height: 1.6;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .intro { max-width: 660px; margin: 10px auto 0; font-size: .9rem; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.3fr) minmax(190px, .75fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    section {
+      position: relative;
+      padding: 22px;
+      border: 1px solid var(--accent-dim);
+      border-radius: 12px;
+      background:
+        linear-gradient(135deg, #ad8bff09, transparent 30%),
+        color-mix(in srgb, var(--panel) 96%, transparent);
+      box-shadow: inset 0 0 0 3px #11131b, inset 0 0 0 4px #ad8bff16, 0 14px 40px #0002;
+    }
+
+    section::before,
+    section::after {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: var(--accent);
+      border-style: solid;
+      content: "";
+      opacity: .7;
+      pointer-events: none;
+    }
+
+    section::before {
+      top: 7px;
+      left: 7px;
+      border-width: 1px 0 0 1px;
+    }
+
+    section::after {
+      right: 7px;
+      bottom: 7px;
+      border-width: 0 1px 1px 0;
+    }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 7px;
+      font-size: 1.28rem;
+      font-weight: 600;
+      letter-spacing: .015em;
+    }
+
+    h2::before {
+      width: 5px;
+      height: 1.15em;
+      border-radius: 4px;
+      background: linear-gradient(var(--accent), var(--accent-dim));
+      content: "";
+    }
+
+    .hint { margin: 0 0 18px 15px; font-size: .8rem; }
+
+    .fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px 11px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: #d7d9e3;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .8rem;
+      font-weight: 650;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 11px;
+      border: 1px solid #414657;
+      border-radius: 6px;
+      outline: none;
+      background: linear-gradient(180deg, #12141c, #161821);
+      color: #fff;
+      font: inherit;
+      font-size: 1rem;
+      font-variant-numeric: tabular-nums;
+      transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    input:focus-visible {
+      border-color: var(--accent);
+      background: #171622;
+      box-shadow: 0 0 0 2px #ad8bff25, 0 0 18px #ad8bff15;
+    }
+
+    input[aria-invalid="true"] { border-color: #ff7777; }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+      padding: 13px 2px 0;
+      border-top: 1px solid var(--accent-dim);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .total output {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 16px #ad8bff40;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .result {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid #303443;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #1b1d29, #151721 70%);
+      box-shadow: inset 0 1px #ffffff05;
+      transition: border-color .16s ease, transform .16s ease;
+    }
+
+    .result:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-1px);
+    }
+
+    .result-name {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .8rem;
+      line-height: 1.35;
+    }
+
+    .result output {
+      display: block;
+      overflow-wrap: anywhere;
+      font-size: clamp(1.15rem, 3vw, 1.5rem);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 16px #ad8bff14;
+    }
+
+    .result small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .75rem;
+      line-height: 1.45;
+    }
+
+    .message {
+      min-height: 1.5em;
+      margin: 14px 0 0;
+      color: #ff9999;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .86rem;
+    }
+
+    .portrait-panel { text-align: center; }
+
+    .portrait-panel h2 { text-align: left; }
+
+    .portrait-frame {
+      display: grid;
+      position: relative;
+      overflow: hidden;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      margin: 15px 0 13px;
+      border: 1px dashed var(--accent-dim);
+      border-radius: 8px;
+      background:
+        radial-gradient(ellipse at 50% 35%, #ad8bff12, transparent 62%),
+        linear-gradient(145deg, #12141c, #191a27);
+    }
+
+    .portrait-placeholder {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      padding: 18px;
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    .portrait-placeholder svg {
+      width: 56px;
+      height: 56px;
+      color: var(--accent-dim);
+    }
+
+    .portrait-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .portrait-image[hidden],
+    .portrait-placeholder[hidden],
+    .remove-image[hidden] { display: none; }
+
+    .portrait-actions {
+      display: grid;
+      gap: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .portrait-actions button {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--accent-dim);
+      border-radius: 6px;
+      background: #252033;
+      color: #f2f3f8;
+      cursor: pointer;
+      font: inherit;
+      font-size: .82rem;
+      font-weight: 650;
+      transition: background .16s ease, border-color .16s ease;
+    }
+
+    .portrait-actions button:hover {
+      border-color: var(--accent);
+      background: #302544;
+    }
+
+    .portrait-actions button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .portrait-actions .remove-image {
+      border-color: var(--border);
+      background: #171821;
+      color: var(--muted);
+    }
+
+    .portrait-message {
+      min-height: 1.4em;
+      margin: 9px 0 0;
+      color: #ff9999;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .75rem;
+      line-height: 1.45;
+    }
+
+    .rules {
+      margin-top: 20px;
+      padding: 15px 18px;
+      border: 1px solid var(--accent-dim);
+      border-radius: 8px;
+      background: #1b1e29b8;
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .84rem;
+      line-height: 1.6;
+    }
+
+    .rules summary {
+      color: #d7d9e3;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      font-size: .98rem;
+    }
+
+    .rules ul { margin: 12px 0 0; padding-left: 20px; }
+    .rules li + li { margin-top: 5px; }
+
+    .persistence-note {
+      margin: 10px 2px 0;
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .75rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .storage-message {
+      min-height: 1.4em;
+      margin: 8px 0 0;
+      color: #ff9999;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .75rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 700px) {
+      main { padding-top: 32px; }
+      .layout { grid-template-columns: 1fr; }
+      header { padding: 22px 30px; }
+      .portrait-frame { max-width: 300px; margin-right: auto; margin-left: auto; }
+      .portrait-actions { max-width: 300px; margin: 0 auto; }
+    }
+
+    @media (max-width: 390px) {
+      header::before { left: 10px; }
+      header::after { right: 10px; }
+      section { padding: 17px; }
+      .fields, .results { grid-template-columns: 1fr 1fr; gap: 11px 9px; }
+      .result { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">✦ Crônicas do aventureiro ✦</p>
+      <h1>Ficha de personagem</h1>
+      <p class="intro">Distribua seus atributos e descubra o poder que cada ponto desperta.</p>
+    </header>
+
+    <div class="layout">
+      <section aria-labelledby="points-heading">
+        <h2 id="points-heading">Atributos</h2>
+        <p class="hint">Altere qualquer valor. Os resultados são recalculados na hora.</p>
+        <div class="fields">
+          <label for="vigor">❤️ Vigor
+            <input id="vigor" name="vigor" type="number" min="0" step="1" value="100" inputmode="numeric">
+          </label>
+          <label for="resistencia">🛡️ Resistência
+            <input id="resistencia" name="resistencia" type="number" min="0" step="1" value="111" inputmode="numeric">
+          </label>
+          <label for="velocidade">🏃 Velocidade
+            <input id="velocidade" name="velocidade" type="number" min="0" step="1" value="70" inputmode="numeric">
+          </label>
+          <label for="destreza">⚔️ Destreza
+            <input id="destreza" name="destreza" type="number" min="0" step="1" value="62" inputmode="numeric">
+          </label>
+          <label for="precisao">🪡 Precisão
+            <input id="precisao" name="precisao" type="number" min="0" step="1" value="0" inputmode="numeric">
+          </label>
+          <label for="forca">👊 Força
+            <input id="forca" name="forca" type="number" min="0" step="1" value="170" inputmode="numeric">
+          </label>
+          <label for="espirito">⭐️ Espírito
+            <input id="espirito" name="espirito" type="number" min="0" step="1" value="135" inputmode="numeric">
+          </label>
+          <label for="mana">🌀 Mana
+            <input id="mana" name="mana" type="number" min="0" step="1" value="110" inputmode="numeric">
+          </label>
+        </div>
+        <div class="total">
+          <span>Total de pontos</span>
+          <output id="total-pontos" aria-live="polite">758</output>
+        </div>
+      </section>
+
+      <section aria-labelledby="results-heading">
+        <h2 id="results-heading">Poderes e capacidades</h2>
+        <p class="hint">Valores calculados com base nos atributos atuais.</p>
+        <div class="results" aria-live="polite">
+          <div class="result">
+            <span class="result-name">❤️ HP</span>
+            <output id="resultado-hp">500</output>
+            <small>Vigor × 5</small>
+          </div>
+          <div class="result">
+            <span class="result-name">🛡️ Redução de dano</span>
+            <output id="resultado-resistencia">277,5</output>
+            <small>Resistência × 2,5</small>
+          </div>
+          <div class="result">
+            <span class="result-name">🏃 Velocidade</span>
+            <output id="resultado-velocidade">70 km/h</output>
+            <small>1 km/h por ponto</small>
+          </div>
+          <div class="result">
+            <span class="result-name">⚔️ Dano com armas brancas</span>
+            <output id="resultado-destreza">217</output>
+            <small>Destreza × 3,5</small>
+          </div>
+          <div class="result">
+            <span class="result-name">🪡 Dano de longo alcance</span>
+            <output id="resultado-precisao">0</output>
+            <small>Precisão × 3,5</small>
+          </div>
+          <div class="result">
+            <span class="result-name">👊 Dano físico (Força)</span>
+            <output id="resultado-forca">595</output>
+            <small>Força × 3,5</small>
+          </div>
+          <div class="result">
+            <span class="result-name">🏋️ Carga de equipamento</span>
+            <output id="resultado-carga">170 kg</output>
+            <small>1 kg por ponto de Força</small>
+          </div>
+          <div class="result">
+            <span class="result-name">⚔️ Dano com arma híbrida</span>
+            <output id="resultado-hibrida">433</output>
+            <small id="detalhe-hibrida">Destreza: 93 + Força: 340</small>
+          </div>
+          <div class="result">
+            <span class="result-name">⭐️ Dano com magia</span>
+            <output id="resultado-espirito">472,5</output>
+            <small>Espírito × 3,5</small>
+          </div>
+          <div class="result">
+            <span class="result-name">🌀 Reserva de mana</span>
+            <output id="resultado-mana">1100</output>
+            <small>10 pontos de reserva por ponto de Mana</small>
+          </div>
+        </div>
+        <p id="mensagem" class="message" role="alert"></p>
+      </section>
+
+      <section class="portrait-panel" aria-labelledby="portrait-heading">
+        <h2 id="portrait-heading">Retrato</h2>
+        <p class="hint">A imagem da personagem.</p>
+        <div class="portrait-frame">
+          <div id="portrait-placeholder" class="portrait-placeholder">
+            <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <circle cx="32" cy="21" r="11" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 56c1.8-12 9-18 20-18s18.2 6 20 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M8 8h10M8 8v10m48-10H46m10 0v10M8 56h10m-10 0V46m48 10H46m10 0V46" stroke="currentColor" stroke-width="1.5" opacity=".65"/>
+            </svg>
+            <span>Nenhum retrato escolhido</span>
+          </div>
+          <img id="portrait-image" class="portrait-image" alt="Retrato da personagem" hidden>
+        </div>
+        <div class="portrait-actions">
+          <input id="portrait-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+          <button id="select-image" type="button" aria-controls="portrait-file">Escolher imagem</button>
+          <button id="remove-image" class="remove-image" type="button" hidden>Remover imagem</button>
+        </div>
+        <p id="portrait-message" class="portrait-message" role="alert"></p>
+        <p id="storage-message" class="storage-message" role="alert"></p>
+      </section>
+    </div>
+
+    <details class="rules">
+      <summary>Regras usadas no cálculo</summary>
+      <ul>
+        <li>HP: cada 2 de Vigor = 10 HP; redução: cada 2 de Resistência = 5.</li>
+        <li>Armas brancas, longo alcance, dano físico e magia: cada 2 pontos do atributo correspondente = 7 de dano.</li>
+        <li>Arma híbrida: cada 2 de Destreza = 3 de dano e cada 2 de Força = 4 de dano (divisão 40/60).</li>
+        <li>Cada ponto de Força = 1 kg de carga; cada ponto de Mana = 10 de reserva.</li>
+        <li>Quando o resultado tiver fração, ela é exibida com até 2 casas decimais. O total soma os oito atributos.</li>
+      </ul>
+    </details>
+    <p class="persistence-note">Atributos e retrato são salvos neste navegador e ficam disponíveis ao voltar neste mesmo dispositivo.</p>
+  </main>
+
+  <script>
+    const campos = ["vigor", "resistencia", "velocidade", "destreza", "precisao", "forca", "espirito", "mana"];
+    const formatador = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
+    const tamanhoMaximoImagem = 8 * 1024 * 1024;
+    const nomeBanco = "status-eternity";
+    const nomeColecao = "fichas";
+    let bancoDados = null;
+    let urlImagemAtual = null;
+    let arquivoImagemAtual = null;
+    let estadoCarregado = false;
+    let temporizadorSalvamento = null;
+    let filaSalvamento = Promise.resolve();
+    const mostrar = (id, valor, sufixo = "") => {
+      document.getElementById(id).textContent = `${formatador.format(valor)}${sufixo}`;
+    };
+
+    const seletorImagem = document.getElementById("portrait-file");
+    const imagemRetrato = document.getElementById("portrait-image");
+    const placeholderRetrato = document.getElementById("portrait-placeholder");
+    const botaoRemoverImagem = document.getElementById("remove-image");
+    const mensagemImagem = document.getElementById("portrait-message");
+    const mensagemArmazenamento = document.getElementById("storage-message");
+
+    function abrirBanco() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) {
+          reject(new Error("O armazenamento local não está disponível neste navegador."));
+          return;
+        }
+
+        const solicitacao = window.indexedDB.open(nomeBanco, 1);
+        solicitacao.onupgradeneeded = () => {
+          solicitacao.result.createObjectStore(nomeColecao, { keyPath: "id" });
+        };
+        solicitacao.onsuccess = () => resolve(solicitacao.result);
+        solicitacao.onerror = () => reject(solicitacao.error || new Error("Não foi possível abrir o armazenamento local."));
+        solicitacao.onblocked = () => reject(new Error("Feche outras abas desta ficha e tente novamente."));
+      });
+    }
+
+    function lerFicha(banco) {
+      return new Promise((resolve, reject) => {
+        const transacao = banco.transaction(nomeColecao, "readonly");
+        const solicitacao = transacao.objectStore(nomeColecao).get("personagem");
+        solicitacao.onsuccess = () => resolve(solicitacao.result);
+        solicitacao.onerror = () => reject(solicitacao.error || new Error("Não foi possível carregar a ficha salva."));
+      });
+    }
+
+    function guardarFicha(banco, ficha) {
+      return new Promise((resolve, reject) => {
+        const transacao = banco.transaction(nomeColecao, "readwrite");
+        transacao.objectStore(nomeColecao).put(ficha);
+        transacao.oncomplete = resolve;
+        transacao.onerror = () => reject(transacao.error || new Error("Não foi possível salvar a ficha."));
+        transacao.onabort = () => reject(transacao.error || new Error("O salvamento da ficha foi cancelado."));
+      });
+    }
+
+    async function salvarEstado() {
+      if (!estadoCarregado || !bancoDados) return;
+      const atributos = Object.fromEntries(campos.map(nome => [nome, document.getElementById(nome).value]));
+      await guardarFicha(bancoDados, {
+        id: "personagem",
+        atributos,
+        imagem: arquivoImagemAtual
+      });
+      mensagemArmazenamento.textContent = "";
+    }
+
+    function agendarSalvamento() {
+      clearTimeout(temporizadorSalvamento);
+      temporizadorSalvamento = setTimeout(() => {
+        filaSalvamento = filaSalvamento
+          .then(salvarEstado)
+          .catch(erro => {
+            mensagemArmazenamento.textContent = `Não foi possível salvar a ficha: ${erro.message}`;
+          });
+      }, 300);
+    }
+
+    function mostrarImagem(arquivo) {
+      if (urlImagemAtual) URL.revokeObjectURL(urlImagemAtual);
+      arquivoImagemAtual = arquivo;
+      urlImagemAtual = arquivo ? URL.createObjectURL(arquivo) : null;
+      if (urlImagemAtual) {
+        imagemRetrato.src = urlImagemAtual;
+        imagemRetrato.hidden = false;
+        placeholderRetrato.hidden = true;
+        botaoRemoverImagem.hidden = false;
+      } else {
+        imagemRetrato.removeAttribute("src");
+        imagemRetrato.hidden = true;
+        placeholderRetrato.hidden = false;
+        botaoRemoverImagem.hidden = true;
+      }
+    }
+
+    async function carregarFicha() {
+      try {
+        bancoDados = await abrirBanco();
+        const ficha = await lerFicha(bancoDados);
+        if (ficha && ficha.atributos) {
+          for (const nome of campos) {
+            if (typeof ficha.atributos[nome] === "string") {
+              document.getElementById(nome).value = ficha.atributos[nome];
+            }
+          }
+        }
+
+        if (ficha && ficha.imagem instanceof Blob && ficha.imagem.type.startsWith("image/")) {
+          mostrarImagem(ficha.imagem);
+        }
+      } catch (erro) {
+        mensagemArmazenamento.textContent = `Não foi possível carregar a ficha salva: ${erro.message}`;
+      } finally {
+        estadoCarregado = true;
+        atualizarResultados();
+      }
+    }
+
+    document.getElementById("select-image").addEventListener("click", () => seletorImagem.click());
+
+    seletorImagem.addEventListener("change", () => {
+      const arquivo = seletorImagem.files[0];
+      mensagemImagem.textContent = "";
+      if (!arquivo) return;
+
+      const formatosAceitos = ["image/png", "image/jpeg", "image/webp", "image/gif"];
+      if (!formatosAceitos.includes(arquivo.type)) {
+        mensagemImagem.textContent = "Escolha uma imagem PNG, JPG, WEBP ou GIF.";
+        seletorImagem.value = "";
+        return;
+      }
+
+      if (arquivo.size > tamanhoMaximoImagem) {
+        mensagemImagem.textContent = "A imagem deve ter no máximo 8 MB.";
+        seletorImagem.value = "";
+        return;
+      }
+
+      mostrarImagem(arquivo);
+      agendarSalvamento();
+    });
+
+    imagemRetrato.addEventListener("error", () => {
+      if (!urlImagemAtual) return;
+      URL.revokeObjectURL(urlImagemAtual);
+      urlImagemAtual = null;
+      arquivoImagemAtual = null;
+      imagemRetrato.removeAttribute("src");
+      imagemRetrato.hidden = true;
+      placeholderRetrato.hidden = false;
+      botaoRemoverImagem.hidden = true;
+      seletorImagem.value = "";
+      mensagemImagem.textContent = "Não foi possível carregar essa imagem. Tente escolher outra.";
+      agendarSalvamento();
+    });
+
+    botaoRemoverImagem.addEventListener("click", () => {
+      if (urlImagemAtual) URL.revokeObjectURL(urlImagemAtual);
+      urlImagemAtual = null;
+      arquivoImagemAtual = null;
+      seletorImagem.value = "";
+      imagemRetrato.removeAttribute("src");
+      imagemRetrato.hidden = true;
+      placeholderRetrato.hidden = false;
+      botaoRemoverImagem.hidden = true;
+      mensagemImagem.textContent = "";
+      agendarSalvamento();
+    });
+
+    function atualizarResultados() {
+      const valores = {};
+      let valido = true;
+
+      for (const nome of campos) {
+        const campo = document.getElementById(nome);
+        const valor = campo.valueAsNumber;
+        const campoValido = campo.value !== "" && Number.isFinite(valor) && valor >= 0 && Number.isInteger(valor);
+        campo.setAttribute("aria-invalid", String(!campoValido));
+        if (!campoValido) {
+          valido = false;
+        } else {
+          valores[nome] = valor;
+        }
+      }
+
+      const mensagem = document.getElementById("mensagem");
+      if (!valido) {
+        mensagem.textContent = "Informe números inteiros iguais ou maiores que zero em todos os atributos.";
+        return;
+      }
+
+      mensagem.textContent = "";
+      const total = campos.reduce((soma, nome) => soma + valores[nome], 0);
+      mostrar("total-pontos", total);
+      mostrar("resultado-hp", valores.vigor * 5);
+      mostrar("resultado-resistencia", valores.resistencia * 2.5);
+      mostrar("resultado-velocidade", valores.velocidade, " km/h");
+      mostrar("resultado-destreza", valores.destreza * 3.5);
+      mostrar("resultado-precisao", valores.precisao * 3.5);
+      mostrar("resultado-forca", valores.forca * 3.5);
+      mostrar("resultado-carga", valores.forca, " kg");
+      const danoDestrezaHibrido = valores.destreza * 1.5;
+      const danoForcaHibrido = valores.forca * 2;
+      mostrar("resultado-hibrida", danoDestrezaHibrido + danoForcaHibrido);
+      document.getElementById("detalhe-hibrida").textContent =
+        `Destreza: ${formatador.format(danoDestrezaHibrido)} + Força: ${formatador.format(danoForcaHibrido)}`;
+      mostrar("resultado-espirito", valores.espirito * 3.5);
+      mostrar("resultado-mana", valores.mana * 10);
+    }
+
+    for (const nome of campos) {
+      document.getElementById(nome).addEventListener("input", () => {
+        atualizarResultados();
+        agendarSalvamento();
+      });
+    }
+    atualizarResultados();
+    carregarFicha();
+  </script>
+</body>
+</html>

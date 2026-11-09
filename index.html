@@ -61,13 +61,33 @@
     header::after { right: 18px; }
 
     .eyebrow {
-      margin: 0 0 9px;
+      display: block;
+      width: min(100%, 520px);
+      margin: 0 auto 9px;
+      padding: 4px 8px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      outline: none;
+      background: transparent;
       color: var(--accent);
       font-family: Inter, ui-sans-serif, system-ui, sans-serif;
       font-size: .7rem;
       font-weight: 750;
       letter-spacing: .2em;
       text-transform: uppercase;
+      text-align: center;
+      transition: border-color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+
+    .eyebrow::placeholder {
+      color: var(--accent);
+      opacity: .8;
+    }
+
+    .eyebrow:focus-visible {
+      border-color: var(--accent-dim);
+      background: #11131b80;
+      box-shadow: 0 0 0 2px #ad8bff20;
     }
 
     h1 {
@@ -411,7 +431,7 @@
 <body>
   <main>
     <header>
-      <p class="eyebrow">✦ Crônicas do aventureiro ✦</p>
+      <input id="character-name" class="eyebrow" type="text" maxlength="60" placeholder="Nome do personagem" aria-label="Nome do personagem" autocomplete="off">
       <h1>Ficha de personagem</h1>
       <p class="intro">Distribua seus atributos e descubra o poder que cada ponto desperta.</p>
     </header>
@@ -611,6 +631,7 @@
       const atributos = Object.fromEntries(campos.map(nome => [nome, document.getElementById(nome).value]));
       await guardarFicha(bancoDados, {
         id: "personagem",
+        nome: document.getElementById("character-name").value,
         atributos,
         imagem: arquivoImagemAtual
       });
@@ -649,6 +670,9 @@
       try {
         bancoDados = await abrirBanco();
         const ficha = await lerFicha(bancoDados);
+        if (ficha && typeof ficha.nome === "string") {
+          document.getElementById("character-name").value = ficha.nome;
+        }
         if (ficha && ficha.atributos) {
           for (const nome of campos) {
             if (typeof ficha.atributos[nome] === "string") {
@@ -766,6 +790,7 @@
         agendarSalvamento();
       });
     }
+    document.getElementById("character-name").addEventListener("input", agendarSalvamento);
     atualizarResultados();
     carregarFicha();
   </script>

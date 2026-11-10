@@ -174,6 +174,65 @@
       gap: 13px 11px;
     }
 
+    .prodigy-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: #e8ddff;
+    }
+
+    .prodigy-toggle input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      padding: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .training {
+      min-width: 0;
+      margin: 18px 0 0;
+      padding: 14px 12px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .training legend {
+      padding: 0 6px;
+      color: #d7d9e3;
+      font-weight: 700;
+    }
+
+    .training .hint {
+      margin: 0 0 12px;
+    }
+
+    .training-status {
+      margin: 12px 0 0;
+      color: #a9e3bb;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+
+    .training-status[data-available="false"] { color: #ff9999; }
+
+    .prodigy-starting {
+      min-width: 0;
+      margin: 14px 0 0;
+      padding: 12px;
+      border: 1px solid var(--accent-dim);
+      border-radius: 8px;
+    }
+
+    .prodigy-starting legend {
+      padding: 0 6px;
+      color: #d7d9e3;
+      font-weight: 700;
+    }
+
     label {
       display: grid;
       gap: 6px;
@@ -278,6 +337,17 @@
       font-family: Inter, ui-sans-serif, system-ui, sans-serif;
       font-size: .86rem;
     }
+
+    .export-message {
+      min-height: 1.4em;
+      margin: 9px 0 0;
+      color: #a9e3bb;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .78rem;
+      line-height: 1.45;
+    }
+
+    .export-message[data-error="true"] { color: #ff9999; }
 
     .portrait-panel { text-align: center; }
 
@@ -466,6 +536,100 @@
             <input id="mana" name="mana" type="number" min="0" step="1" value="110" inputmode="numeric">
           </label>
         </div>
+        <label class="prodigy-toggle" for="prodigio">
+          <input id="prodigio" type="checkbox">
+          <span>Prodígio (+100 iniciais, treino 2x e +20% de rendimento)</span>
+        </label>
+        <fieldset id="distribuicao-prodigio" class="prodigy-starting" hidden>
+          <legend>Status iniciais de Prodígio</legend>
+          <p class="hint">Distribua os 100 pontos iniciais entre os atributos. É possível aplicar em mais de uma distribuição.</p>
+          <div class="fields">
+            <label for="inicial-vigor">❤️ Vigor
+              <input id="inicial-vigor" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="inicial-resistencia">🛡️ Resistência
+              <input id="inicial-resistencia" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="inicial-velocidade">🏃 Velocidade
+              <input id="inicial-velocidade" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="inicial-destreza">⚔️ Destreza
+              <input id="inicial-destreza" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="inicial-precisao">🪡 Precisão
+              <input id="inicial-precisao" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="inicial-forca">👊 Força
+              <input id="inicial-forca" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="inicial-espirito">⭐️ Espírito
+              <input id="inicial-espirito" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="inicial-mana">🌀 Mana
+              <input id="inicial-mana" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+          </div>
+          <div class="total">
+            <span>Pontos nesta distribuição</span>
+            <output id="total-inicial" aria-live="polite">0</output>
+          </div>
+          <div class="total">
+            <span>Pontos iniciais restantes</span>
+            <output id="inicial-restante" aria-live="polite">100</output>
+          </div>
+          <p id="aviso-inicial" class="training-status" role="status" aria-live="polite"></p>
+          <label class="prodigy-toggle" for="aplicar-inicial">
+            <input id="aplicar-inicial" type="checkbox">
+            <span>Aplicar distribuição dos pontos iniciais</span>
+          </label>
+        </fieldset>
+        <fieldset class="training">
+          <legend>Treino semanal</legend>
+          <p class="hint">Informe os pontos de treino por atributo. Prodígio dobra o limite semanal e aumenta em 20% os atributos ganhos ao aplicar o treino. O limite reinicia toda segunda-feira.</p>
+          <div class="fields">
+            <label for="treino-vigor">❤️ Vigor
+              <input id="treino-vigor" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="treino-resistencia">🛡️ Resistência
+              <input id="treino-resistencia" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="treino-velocidade">🏃 Velocidade
+              <input id="treino-velocidade" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="treino-destreza">⚔️ Destreza
+              <input id="treino-destreza" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="treino-precisao">🪡 Precisão
+              <input id="treino-precisao" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="treino-forca">👊 Força
+              <input id="treino-forca" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="treino-espirito">⭐️ Espírito
+              <input id="treino-espirito" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label for="treino-mana">🌀 Mana
+              <input id="treino-mana" type="number" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+          </div>
+          <div class="total">
+            <span>Pontos de treino</span>
+            <output id="total-treino" aria-live="polite">0</output>
+          </div>
+          <div class="total">
+            <span>Ganho nos atributos ao aplicar</span>
+            <output id="ganho-treino" aria-live="polite">0</output>
+          </div>
+          <div class="total">
+            <span>Pontos aplicados nesta semana</span>
+            <output id="treino-usado" aria-live="polite">0</output>
+          </div>
+          <p id="aviso-treino" class="training-status" role="status" aria-live="polite"></p>
+          <label class="prodigy-toggle" for="aplicar-treino">
+            <input id="aplicar-treino" type="checkbox">
+            <span>Aplicar treino aos atributos (zera os pontos planejados)</span>
+          </label>
+        </fieldset>
         <div class="total">
           <span>Total de pontos</span>
           <output id="total-pontos" aria-live="polite">758</output>
@@ -528,6 +692,10 @@
           </div>
         </div>
         <p id="mensagem" class="message" role="alert"></p>
+        <div class="portrait-actions">
+          <button id="generate-image" type="button">Gerar imagem dos status</button>
+        </div>
+        <p id="export-message" class="export-message" role="status" aria-live="polite"></p>
       </section>
 
       <section class="portrait-panel" aria-labelledby="portrait-heading">
@@ -561,14 +729,18 @@
         <li>Armas brancas, longo alcance, dano físico e magia: cada 2 pontos do atributo correspondente = 7 de dano.</li>
         <li>Arma híbrida: cada 2 de Destreza = 3 de dano e cada 2 de Força = 4 de dano (divisão 40/60).</li>
         <li>Cada ponto de Força = 1 kg de carga; cada ponto de Mana = 10 de reserva.</li>
-        <li>Quando o resultado tiver fração, ela é exibida com até 2 casas decimais. O total soma os oito atributos.</li>
+        <li>Prodígio concede 100 pontos iniciais para distribuir, dobra o limite semanal de treino (de 200 para 400 pontos) e aumenta em 20% os atributos ganhos nos treinos.</li>
+        <li>Ao aplicar um plano válido, os pontos de treino são somados permanentemente aos atributos; com Prodígio, o ganho de cada atributo é aumentado em 20% e arredondado para cima. Os campos são zerados e os pontos-base continuam contando no limite da semana.</li>
+        <li>Quando o resultado tiver fração, ela é exibida com até 2 casas decimais.</li>
       </ul>
     </details>
-    <p class="persistence-note">Atributos e retrato são salvos neste navegador e ficam disponíveis ao voltar neste mesmo dispositivo.</p>
+    <p class="persistence-note">Atributos, Prodígio, pontos iniciais restantes, plano e pontos de treino semanais aplicados e retrato são salvos neste navegador e ficam disponíveis ao voltar neste mesmo dispositivo.</p>
   </main>
 
   <script>
     const campos = ["vigor", "resistencia", "velocidade", "destreza", "precisao", "forca", "espirito", "mana"];
+    const camposTreino = campos.map(nome => `treino-${nome}`);
+    const camposIniciais = campos.map(nome => `inicial-${nome}`);
     const formatador = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
     const tamanhoMaximoImagem = 8 * 1024 * 1024;
     const nomeBanco = "status-eternity";
@@ -577,11 +749,21 @@
     let urlImagemAtual = null;
     let arquivoImagemAtual = null;
     let estadoCarregado = false;
+    let pontosTreinoUsados = 0;
+    let pontosProdigioRestantes = null;
+    let semanaTreino = obterSemanaAtual();
     let temporizadorSalvamento = null;
     let filaSalvamento = Promise.resolve();
     const mostrar = (id, valor, sufixo = "") => {
       document.getElementById(id).textContent = `${formatador.format(valor)}${sufixo}`;
     };
+
+    function obterSemanaAtual() {
+      const data = new Date();
+      const diaSemana = (data.getDay() + 6) % 7;
+      data.setDate(data.getDate() - diaSemana);
+      return `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, "0")}-${String(data.getDate()).padStart(2, "0")}`;
+    }
 
     const seletorImagem = document.getElementById("portrait-file");
     const imagemRetrato = document.getElementById("portrait-image");
@@ -628,11 +810,20 @@
 
     async function salvarEstado() {
       if (!estadoCarregado || !bancoDados) return;
+      atualizarTreino();
       const atributos = Object.fromEntries(campos.map(nome => [nome, document.getElementById(nome).value]));
+      const treinos = Object.fromEntries(camposTreino.map(id => [id, document.getElementById(id).value]));
+      const distribuicaoInicial = Object.fromEntries(camposIniciais.map(id => [id, document.getElementById(id).value]));
       await guardarFicha(bancoDados, {
         id: "personagem",
         nome: document.getElementById("character-name").value,
         atributos,
+        prodigio: document.getElementById("prodigio").checked,
+        pontosProdigioRestantes,
+        distribuicaoInicial,
+        treinos,
+        pontosTreinoUsados,
+        semanaTreino,
         imagem: arquivoImagemAtual
       });
       mensagemArmazenamento.textContent = "";
@@ -666,6 +857,206 @@
       }
     }
 
+    function desenharPainel(ctx, x, y, largura, altura) {
+      ctx.fillStyle = "#1b1e29";
+      ctx.strokeStyle = "#66518d";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(x, y, largura, altura, 14);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    function desenharLinha(ctx, x, y, largura, rotulo, valor, detalhe = "") {
+      ctx.fillStyle = "#d7d9e3";
+      ctx.font = "600 19px system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(rotulo, x, y);
+      ctx.fillStyle = "#ad8bff";
+      ctx.font = "700 20px system-ui, sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(valor, x + largura, y);
+      if (detalhe) {
+        ctx.fillStyle = "#a6a9b8";
+        ctx.font = "14px system-ui, sans-serif";
+        ctx.fillText(detalhe, x + largura, y + 20);
+      }
+    }
+
+    function lerSnapshotImagem() {
+      const valores = {};
+      for (const nome of campos) {
+        const campo = document.getElementById(nome);
+        const valor = campo.valueAsNumber;
+        if (campo.value === "" || !Number.isFinite(valor) || valor < 0 || !Number.isInteger(valor)) {
+          throw new Error("Corrija os atributos antes de gerar a imagem.");
+        }
+        valores[nome] = valor;
+      }
+
+      const treinos = {};
+      for (const nome of campos) {
+        const campo = document.getElementById(`treino-${nome}`);
+        const valor = campo.valueAsNumber;
+        if (campo.value === "" || !Number.isFinite(valor) || valor < 0 || !Number.isInteger(valor)) {
+          throw new Error("Corrija os pontos de treino antes de gerar a imagem.");
+        }
+        treinos[nome] = valor;
+      }
+
+      const prodigio = document.getElementById("prodigio").checked;
+      const totalTreino = Object.values(treinos).reduce((soma, valor) => soma + valor, 0);
+      const limiteTreino = prodigio ? 400 : 200;
+      if (totalTreino + pontosTreinoUsados > limiteTreino) {
+        throw new Error("Ajuste o plano de treino ao limite semanal antes de gerar a imagem.");
+      }
+
+      const ganhosTreino = Object.fromEntries(campos.map(nome => [
+        nome,
+        prodigio ? Math.ceil(treinos[nome] * 1.2) : treinos[nome]
+      ]));
+      const totalGanhoTreino = Object.values(ganhosTreino).reduce((soma, valor) => soma + valor, 0);
+      const soma = campos.reduce((total, nome) => total + valores[nome], 0);
+      const hibridoDestreza = valores.destreza * 1.5;
+      const hibridoForca = valores.forca * 2;
+      const poderes = [
+        ["HP", valores.vigor * 5, ""],
+        ["Redução de dano", valores.resistencia * 2.5, ""],
+        ["Velocidade", valores.velocidade, " km/h"],
+        ["Dano com armas brancas", valores.destreza * 3.5, ""],
+        ["Dano de longo alcance", valores.precisao * 3.5, ""],
+        ["Dano físico (Força)", valores.forca * 3.5, ""],
+        ["Carga de equipamento", valores.forca, " kg"],
+        ["Dano com arma híbrida", hibridoDestreza + hibridoForca, ""],
+        ["Dano com magia", valores.espirito * 3.5, ""],
+        ["Reserva de mana", valores.mana * 10, ""]
+      ];
+
+      return {
+        nome: document.getElementById("character-name").value.trim() || "Personagem sem nome",
+        valores,
+        soma,
+        poderes,
+        prodigio,
+        pontosProdigioRestantes,
+        totalTreino,
+        totalGanhoTreino,
+        pontosTreinoUsados,
+        limiteTreino
+      };
+    }
+
+    async function gerarImagemStatus() {
+      const exportacao = document.getElementById("export-message");
+      exportacao.textContent = "";
+      exportacao.dataset.error = "false";
+      const snapshot = lerSnapshotImagem();
+      const canvas = document.createElement("canvas");
+      canvas.width = 1400;
+      canvas.height = 1060;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        throw new Error("Este navegador não conseguiu preparar a imagem.");
+      }
+
+      ctx.fillStyle = "#11131b";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const fundo = ctx.createRadialGradient(700, 0, 30, 700, 0, 1000);
+      fundo.addColorStop(0, "#28233d");
+      fundo.addColorStop(1, "#11131b");
+      ctx.fillStyle = fundo;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "#ad8bff";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48);
+
+      ctx.fillStyle = "#a6a9b8";
+      ctx.font = "700 17px system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("FICHA DE PERSONAGEM", 60, 68);
+      ctx.fillStyle = "#f2f3f8";
+      ctx.font = "600 38px Georgia, serif";
+      ctx.fillText(snapshot.nome.slice(0, 42), 60, 116);
+
+      ctx.textAlign = "right";
+      ctx.fillStyle = snapshot.prodigio ? "#ad8bff" : "#a6a9b8";
+      ctx.font = "700 18px system-ui, sans-serif";
+      ctx.fillText(snapshot.prodigio ? "PRODÍGIO ATIVO" : "PERSONAGEM", 1340, 67);
+      ctx.fillStyle = "#f2f3f8";
+      ctx.font = "700 24px system-ui, sans-serif";
+      ctx.fillText(`${formatador.format(snapshot.soma)} pontos`, 1340, 110);
+
+      const painelY = 155;
+      const painelAltura = 650;
+      desenharPainel(ctx, 55, painelY, 625, painelAltura);
+      desenharPainel(ctx, 720, painelY, 625, painelAltura);
+
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#ad8bff";
+      ctx.font = "700 23px system-ui, sans-serif";
+      ctx.fillText("ATRIBUTOS", 82, 198);
+      ctx.fillText("PODERES E CAPACIDADES", 747, 198);
+
+      const nomesAtributos = {
+        vigor: "Vigor",
+        resistencia: "Resistência",
+        velocidade: "Velocidade",
+        destreza: "Destreza",
+        precisao: "Precisão",
+        forca: "Força",
+        espirito: "Espírito",
+        mana: "Mana"
+      };
+      campos.forEach((nome, indice) => {
+        desenharLinha(ctx, 84, 250 + indice * 65, 565, nomesAtributos[nome],
+          formatador.format(snapshot.valores[nome]));
+      });
+
+      snapshot.poderes.forEach(([nome, valor, sufixo], indice) => {
+        const detalhe = nome === "Dano com arma híbrida"
+          ? `Destreza: ${formatador.format(snapshot.valores.destreza * 1.5)} + Força: ${formatador.format(snapshot.valores.forca * 2)}`
+          : "";
+        desenharLinha(ctx, 748, 245 + indice * 57, 565, nome,
+          `${formatador.format(valor)}${sufixo}`, detalhe);
+      });
+
+      desenharPainel(ctx, 55, 835, 1290, 165);
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#ad8bff";
+      ctx.font = "700 21px system-ui, sans-serif";
+      ctx.fillText("TREINO SEMANAL", 82, 875);
+      ctx.fillStyle = "#d7d9e3";
+      ctx.font = "17px system-ui, sans-serif";
+      const pontosRestantes = Math.max(0, snapshot.limiteTreino - snapshot.pontosTreinoUsados);
+      ctx.fillText(`Limite: ${formatador.format(snapshot.limiteTreino)} pontos`, 82, 915);
+      ctx.fillText(`Aplicados: ${formatador.format(snapshot.pontosTreinoUsados)}  |  Restantes: ${formatador.format(pontosRestantes)}`, 82, 947);
+      ctx.fillText(`Plano atual: ${formatador.format(snapshot.totalTreino)} pontos  |  Ganho ao aplicar: ${formatador.format(snapshot.totalGanhoTreino)} atributos`, 82, 979);
+      if (snapshot.prodigio && snapshot.pontosProdigioRestantes !== null) {
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ad8bff";
+        ctx.fillText(`Pontos iniciais disponíveis: ${formatador.format(snapshot.pontosProdigioRestantes)}`, 1315, 915);
+      }
+
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(imagem => {
+          if (imagem) {
+            resolve(imagem);
+          } else {
+            reject(new Error("Não foi possível converter a ficha para PNG."));
+          }
+        }, "image/png");
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const nomeSeguro = snapshot.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
+      link.href = url;
+      link.download = `${nomeSeguro || "ficha"}-status.png`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      exportacao.textContent = "Imagem PNG gerada e baixada. Os dados foram processados somente neste navegador.";
+    }
+
     async function carregarFicha() {
       try {
         bancoDados = await abrirBanco();
@@ -679,6 +1070,35 @@
               document.getElementById(nome).value = ficha.atributos[nome];
             }
           }
+          if (ficha && typeof ficha.prodigio === "boolean") {
+            document.getElementById("prodigio").checked = ficha.prodigio;
+          }
+          if (ficha && Number.isInteger(ficha.pontosProdigioRestantes) &&
+              ficha.pontosProdigioRestantes >= 0 && ficha.pontosProdigioRestantes <= 100) {
+            pontosProdigioRestantes = ficha.pontosProdigioRestantes;
+          } else if (ficha && ficha.prodigio === true) {
+            pontosProdigioRestantes = 100;
+          }
+          if (ficha && ficha.distribuicaoInicial) {
+            for (const id of camposIniciais) {
+              if (typeof ficha.distribuicaoInicial[id] === "string") {
+                document.getElementById(id).value = ficha.distribuicaoInicial[id];
+              }
+            }
+          }
+          if (ficha && ficha.semanaTreino === obterSemanaAtual()) {
+            semanaTreino = ficha.semanaTreino;
+            if (Number.isInteger(ficha.pontosTreinoUsados) && ficha.pontosTreinoUsados >= 0) {
+              pontosTreinoUsados = ficha.pontosTreinoUsados;
+            }
+            if (ficha.treinos) {
+              for (const id of camposTreino) {
+                if (typeof ficha.treinos[id] === "string") {
+                  document.getElementById(id).value = ficha.treinos[id];
+                }
+              }
+            }
+          }
         }
 
         if (ficha && ficha.imagem instanceof Blob && ficha.imagem.type.startsWith("image/")) {
@@ -689,6 +1109,8 @@
       } finally {
         estadoCarregado = true;
         atualizarResultados();
+        atualizarTreino();
+        atualizarDistribuicaoInicial();
       }
     }
 
@@ -766,22 +1188,209 @@
       }
 
       mensagem.textContent = "";
-      const total = campos.reduce((soma, nome) => soma + valores[nome], 0);
+      const valoresEfetivos = valores;
+      const total = campos.reduce((soma, nome) => soma + valoresEfetivos[nome], 0);
       mostrar("total-pontos", total);
-      mostrar("resultado-hp", valores.vigor * 5);
-      mostrar("resultado-resistencia", valores.resistencia * 2.5);
-      mostrar("resultado-velocidade", valores.velocidade, " km/h");
-      mostrar("resultado-destreza", valores.destreza * 3.5);
-      mostrar("resultado-precisao", valores.precisao * 3.5);
-      mostrar("resultado-forca", valores.forca * 3.5);
-      mostrar("resultado-carga", valores.forca, " kg");
-      const danoDestrezaHibrido = valores.destreza * 1.5;
-      const danoForcaHibrido = valores.forca * 2;
+      mostrar("resultado-hp", valoresEfetivos.vigor * 5);
+      mostrar("resultado-resistencia", valoresEfetivos.resistencia * 2.5);
+      mostrar("resultado-velocidade", valoresEfetivos.velocidade, " km/h");
+      mostrar("resultado-destreza", valoresEfetivos.destreza * 3.5);
+      mostrar("resultado-precisao", valoresEfetivos.precisao * 3.5);
+      mostrar("resultado-forca", valoresEfetivos.forca * 3.5);
+      mostrar("resultado-carga", valoresEfetivos.forca, " kg");
+      const danoDestrezaHibrido = valoresEfetivos.destreza * 1.5;
+      const danoForcaHibrido = valoresEfetivos.forca * 2;
       mostrar("resultado-hibrida", danoDestrezaHibrido + danoForcaHibrido);
       document.getElementById("detalhe-hibrida").textContent =
         `Destreza: ${formatador.format(danoDestrezaHibrido)} + Força: ${formatador.format(danoForcaHibrido)}`;
-      mostrar("resultado-espirito", valores.espirito * 3.5);
-      mostrar("resultado-mana", valores.mana * 10);
+      mostrar("resultado-espirito", valoresEfetivos.espirito * 3.5);
+      mostrar("resultado-mana", valoresEfetivos.mana * 10);
+    }
+
+    function atualizarTreino() {
+      const semanaAtual = obterSemanaAtual();
+      if (semanaTreino !== semanaAtual) {
+        semanaTreino = semanaAtual;
+        pontosTreinoUsados = 0;
+        for (const id of camposTreino) {
+          document.getElementById(id).value = "0";
+        }
+      }
+
+      const limite = document.getElementById("prodigio").checked ? 400 : 200;
+      const restante = Math.max(0, limite - pontosTreinoUsados);
+      let totalTreino = 0;
+      let valido = true;
+      for (const id of camposTreino) {
+        const campo = document.getElementById(id);
+        const valor = campo.valueAsNumber;
+        const campoValido = campo.value !== "" && Number.isFinite(valor) && valor >= 0 && Number.isInteger(valor);
+        campo.setAttribute("aria-invalid", String(!campoValido));
+        if (!campoValido) {
+          valido = false;
+        } else {
+          totalTreino += valor;
+        }
+        campo.max = String(restante);
+      }
+
+      mostrar("total-treino", totalTreino);
+      const ganhoTreino = camposTreino.reduce((soma, id) => {
+        const valor = document.getElementById(id).valueAsNumber;
+        if (!Number.isFinite(valor) || valor < 0 || !Number.isInteger(valor)) return soma;
+        return soma + (document.getElementById("prodigio").checked ? Math.ceil(valor * 1.2) : valor);
+      }, 0);
+      mostrar("ganho-treino", ganhoTreino);
+      mostrar("treino-usado", pontosTreinoUsados);
+      const aviso = document.getElementById("aviso-treino");
+      const disponivel = valido && restante > 0 && totalTreino <= restante;
+      aviso.dataset.available = String(disponivel);
+      if (!valido) {
+        aviso.textContent = "Informe pontos inteiros iguais ou maiores que zero em todos os atributos de treino.";
+      } else if (pontosTreinoUsados >= limite) {
+        aviso.textContent = `Treino indisponível: limite semanal de ${formatador.format(limite)} pontos atingido.`;
+      } else if (totalTreino > restante) {
+        aviso.textContent = `Treino indisponível: o plano excede os ${formatador.format(restante)} pontos restantes nesta semana.`;
+      } else {
+        aviso.textContent = `Treino disponível: ${formatador.format(restante)} pontos restantes para aplicar nesta semana (limite: ${formatador.format(limite)}).`;
+      }
+    }
+
+    function aplicarTreino() {
+      const opcaoAplicar = document.getElementById("aplicar-treino");
+      opcaoAplicar.checked = false;
+      atualizarTreino();
+
+      const planoValido = camposTreino.every(id => {
+        const campo = document.getElementById(id);
+        return campo.value !== "" && Number.isFinite(campo.valueAsNumber) &&
+          campo.valueAsNumber >= 0 && Number.isInteger(campo.valueAsNumber);
+      });
+      if (!planoValido) {
+        document.getElementById("mensagem").textContent =
+          "Corrija os pontos de treino: use números inteiros iguais ou maiores que zero.";
+        return;
+      }
+
+      const plano = Object.fromEntries(campos.map(nome => [
+        nome,
+        document.getElementById(`treino-${nome}`).valueAsNumber
+      ]));
+      const totalTreino = Object.values(plano).reduce((soma, valor) => soma + valor, 0);
+      const limite = document.getElementById("prodigio").checked ? 400 : 200;
+      if (totalTreino === 0 || totalTreino > limite - pontosTreinoUsados) {
+        document.getElementById("mensagem").textContent = totalTreino === 0
+          ? "Distribua pontos nos atributos de treino antes de aplicá-los."
+          : "O plano excede os pontos disponíveis nesta semana e não foi aplicado.";
+        return;
+      }
+
+      for (const nome of campos) {
+        const atributo = document.getElementById(nome);
+        const valorAtual = atributo.valueAsNumber;
+        if (atributo.value === "" || !Number.isFinite(valorAtual) || valorAtual < 0 || !Number.isInteger(valorAtual)) {
+          document.getElementById("mensagem").textContent =
+            "Corrija os atributos antes de aplicar o treino.";
+          return;
+        }
+      }
+
+      for (const nome of campos) {
+        const atributo = document.getElementById(nome);
+        const ganho = document.getElementById("prodigio").checked
+          ? Math.ceil(plano[nome] * 1.2)
+          : plano[nome];
+        atributo.value = String(atributo.valueAsNumber + ganho);
+        document.getElementById(`treino-${nome}`).value = "0";
+      }
+      pontosTreinoUsados += totalTreino;
+      document.getElementById("mensagem").textContent =
+        `${formatador.format(totalTreino)} pontos de treino aplicados; o ganho de atributos incluiu o bônus de Prodígio quando aplicável.`;
+      atualizarResultados();
+      atualizarTreino();
+      agendarSalvamento();
+    }
+
+    function atualizarDistribuicaoInicial() {
+      const painel = document.getElementById("distribuicao-prodigio");
+      const ativa = document.getElementById("prodigio").checked;
+      painel.hidden = !ativa || pontosProdigioRestantes === null || pontosProdigioRestantes === 0;
+      const restante = pontosProdigioRestantes || 0;
+      let total = 0;
+      let valido = true;
+      for (const id of camposIniciais) {
+        const campo = document.getElementById(id);
+        const valor = campo.valueAsNumber;
+        const campoValido = campo.value !== "" && Number.isFinite(valor) && valor >= 0 && Number.isInteger(valor);
+        campo.setAttribute("aria-invalid", String(!campoValido));
+        campo.max = String(restante);
+        if (!campoValido) {
+          valido = false;
+        } else {
+          total += valor;
+        }
+      }
+
+      mostrar("total-inicial", total);
+      mostrar("inicial-restante", Math.max(0, restante - total));
+      const aviso = document.getElementById("aviso-inicial");
+      const disponivel = valido && total > 0 && total <= restante;
+      aviso.dataset.available = String(disponivel);
+      if (!valido) {
+        aviso.textContent = "Informe números inteiros iguais ou maiores que zero.";
+      } else if (total > restante) {
+        aviso.textContent = `A distribuição excede os ${formatador.format(restante)} pontos iniciais restantes.`;
+      } else {
+        aviso.textContent = `${formatador.format(restante)} pontos iniciais disponíveis para distribuir.`;
+      }
+    }
+
+    function aplicarDistribuicaoInicial() {
+      const opcaoAplicar = document.getElementById("aplicar-inicial");
+      opcaoAplicar.checked = false;
+      atualizarDistribuicaoInicial();
+      const mensagem = document.getElementById("mensagem");
+      const planoValido = camposIniciais.every(id => {
+        const campo = document.getElementById(id);
+        return campo.value !== "" && Number.isFinite(campo.valueAsNumber) &&
+          campo.valueAsNumber >= 0 && Number.isInteger(campo.valueAsNumber);
+      });
+      if (!planoValido) {
+        mensagem.textContent = "Corrija a distribuição inicial: use números inteiros iguais ou maiores que zero.";
+        return;
+      }
+
+      const plano = Object.fromEntries(campos.map(nome => [
+        nome,
+        document.getElementById(`inicial-${nome}`).valueAsNumber
+      ]));
+      const total = Object.values(plano).reduce((soma, valor) => soma + valor, 0);
+      if (pontosProdigioRestantes === null || total === 0 || total > pontosProdigioRestantes) {
+        mensagem.textContent = total === 0
+          ? "Distribua pontos iniciais nos atributos antes de aplicá-los."
+          : "A distribuição excede os pontos iniciais disponíveis e não foi aplicada.";
+        return;
+      }
+
+      for (const nome of campos) {
+        const atributo = document.getElementById(nome);
+        const valorAtual = atributo.valueAsNumber;
+        if (atributo.value === "" || !Number.isFinite(valorAtual) || valorAtual < 0 || !Number.isInteger(valorAtual)) {
+          mensagem.textContent = "Corrija os atributos antes de aplicar os pontos iniciais.";
+          return;
+        }
+      }
+
+      for (const nome of campos) {
+        const atributo = document.getElementById(nome);
+        atributo.value = String(atributo.valueAsNumber + plano[nome]);
+        document.getElementById(`inicial-${nome}`).value = "0";
+      }
+      pontosProdigioRestantes -= total;
+      mensagem.textContent = `${formatador.format(total)} pontos iniciais distribuídos nos atributos.`;
+      atualizarResultados();
+      atualizarDistribuicaoInicial();
+      agendarSalvamento();
     }
 
     for (const nome of campos) {
@@ -790,9 +1399,49 @@
         agendarSalvamento();
       });
     }
+    for (const id of camposTreino) {
+      document.getElementById(id).addEventListener("input", () => {
+        atualizarTreino();
+        atualizarResultados();
+        agendarSalvamento();
+      });
+    }
+    document.getElementById("prodigio").addEventListener("change", () => {
+      if (document.getElementById("prodigio").checked && pontosProdigioRestantes === null) {
+        pontosProdigioRestantes = 100;
+      }
+      atualizarResultados();
+      atualizarTreino();
+      atualizarDistribuicaoInicial();
+      agendarSalvamento();
+    });
+    document.getElementById("aplicar-treino").addEventListener("change", evento => {
+      if (evento.currentTarget.checked) aplicarTreino();
+    });
+    for (const id of camposIniciais) {
+      document.getElementById(id).addEventListener("input", atualizarDistribuicaoInicial);
+    }
+    document.getElementById("aplicar-inicial").addEventListener("change", evento => {
+      if (evento.currentTarget.checked) aplicarDistribuicaoInicial();
+    });
+    document.getElementById("generate-image").addEventListener("click", () => {
+      gerarImagemStatus().catch(erro => {
+        const exportacao = document.getElementById("export-message");
+        exportacao.dataset.error = "true";
+        exportacao.textContent = `Não foi possível gerar a imagem: ${erro.message}`;
+      });
+    });
     document.getElementById("character-name").addEventListener("input", agendarSalvamento);
     atualizarResultados();
     carregarFicha();
+    setInterval(() => {
+      const semanaAnterior = semanaTreino;
+      atualizarTreino();
+      if (semanaTreino !== semanaAnterior) {
+        atualizarResultados();
+        agendarSalvamento();
+      }
+    }, 60000);
   </script>
 </body>
 </html>
